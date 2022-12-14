@@ -1,13 +1,12 @@
 import React from 'react';
-import { Rate } from 'antd';
 
-const RatingStar = (ratingCount) => {
-    let ratingNO = ratingCount.rating;
+import Rating from '@mui/material/Rating';
 
+const RatingStar = ({ratingCount}) => {
     return (
         <>
             <div>
-                <Rate defaultValue={ratingNO} />
+                <Rating value={ratingCount} />
                 <br />
             </div>
         </>

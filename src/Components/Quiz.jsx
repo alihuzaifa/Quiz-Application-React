@@ -3,6 +3,9 @@ import RatingStar from "./RatingStar";
 import { Progress } from 'antd'
 import { AllQuestion } from "./Question";
 import { Link } from 'react-router-dom';
+import Rating from '@mui/material/Rating';
+
+
 
 const Quiz = () => {
 
@@ -20,26 +23,22 @@ const Quiz = () => {
     let [selectOp, setSelectOpt] = useState("");
     let [score, setScore] = useState(1);
     let [message, setMessage] = useState(true);
-    let correctQuestion = data[questionNumber].question;
     const [rating, setRating] = useState(1);
-
-
-    let questionCategory = question.category
-    let starRating = data[questionNumber].difficulty;
 
     useEffect(() => {
         if (starRating === "hard") {
-            console.log("Working 3")
             setRating(3)
         } else if (starRating === "medium") {
-            console.log("Working 2")
             setRating(2)
-        } else {
-            console.log("Working 1")
+        } else if (starRating === 'easy') {
             setRating(1)
         }
-    });
-    // console.log(rating)
+
+    }, [questionNumber])
+    let correctQuestion = data[questionNumber].question;
+
+    let questionCategory = question.category
+    var starRating = data[questionNumber].difficulty;
 
     let options = data[questionNumber].incorrect_answers;
     let answer = data[questionNumber].correct_answer
@@ -70,8 +69,6 @@ const Quiz = () => {
         setProgressCount(progressCount + 5)
     }
 
-
-
     return (
         <>
             <div className="main">
@@ -88,7 +85,7 @@ const Quiz = () => {
 
                                 <div className="row">
                                     <div className="col">
-                                        <RatingStar rating={rating}/>
+                                        <RatingStar ratingCount={rating} />
                                     </div>
                                 </div>
 
