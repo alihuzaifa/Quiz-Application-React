@@ -1,0 +1,156 @@
+import React, { useEffect, useState } from 'react';
+import RatingStar from "./Components/RatingStar";
+// import ProgressBar from './Components/Progress';
+import { Progress } from 'antd'
+import { AllQuestion } from "./Components/Question";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./App.css";
+
+const App = () => {
+  // Complete Data
+  let data = AllQuestion;
+
+  // For Question Only
+  let [questionNumber, setQuestionNumber] = useState(0);
+  let [disable, setDisable] = useState(false);
+  let [showBtn, setShowBtn] = useState(true);
+  let [isSelect, setIsSelect] = useState(true)
+  let [inCorrect, setInCorrect] = useState("");
+  let [condition, setCondition] = useState(false)
+  let [progressCount, setProgressCount] = useState(0)
+  let [question, setQuestion] = useState(data[questionNumber]);
+  const [active, setActive] = useState(false);
+  let [selectOp, setSelectOpt] = useState("")
+  let correctQuestion = data[questionNumber].question;
+
+
+  //For Category
+  let questionCategory = question.category
+
+  // For Rating Star
+  const [rating, setRating] = useState(1)
+  let starRating = data[questionNumber].difficulty;
+  useEffect(() => {
+    if (starRating === "hard") {
+      setRating(3)
+    } else if (starRating === "medium") {
+      setRating(2)
+    } else {
+      setRating(1)
+    }
+  }, [questionNumber]);
+
+  // For Options
+  let options = data[questionNumber].incorrect_answers;
+
+  // For Correct
+  let answer = data[questionNumber].correct_answer
+
+  const getTickOption = (e, ele) => {
+    setInCorrect(e)
+    setSelectOpt(ele.target)
+    ele.target.classList.add("selectedOp");
+    setDisable(true)
+    setShowBtn(false)
+    setActive(true)
+    console.log(e, answer)
+  }
+
+  const nextQuestion = () => {
+    selectOp.classList.remove("selectedOp")
+    setIsSelect(false)
+    setQuestionNumber(questionNumber + 1);
+    setShowBtn(true);
+    setDisable(false)
+
+    // setProgressCount(progressCount + 5)
+  }
+
+
+
+  return (
+    <>
+      <div className="main">
+        <div className="container">
+          <div className="row">
+            <div className="col-8 offset-2 text-start my-5 bg-light shadow">
+              <h2 className='mt-2'>Question {questionNumber + 1} to {data.length}</h2>
+              <div className="container-fluid">
+                <div className="row">
+                  <div className="col h6">
+                    {questionCategory}
+                  </div>
+                </div>
+
+                <div className="row">
+                  <div className="col">
+                    <RatingStar rating={rating} />
+                  </div>
+                </div>
+
+                <div className="row">
+                  <div className="col question">
+                    Q{questionNumber + 1}: {correctQuestion}?
+                  </div>
+                </div>
+
+                <div className="row h6 mt-3">
+                  {
+                    options.map((v, i) => {
+                      return (
+                        <div className="col-10 offset-1 bg-dark text-white my-1 py-2 text-center btn" onClick={!disable ? (e) => getTickOption(v, e) : null} key={i} value={v} >
+                          {v}
+                        </div>
+                      )
+
+                    })
+                  }
+
+                  <div>
+                  </div>
+                </div>
+
+                {
+                  !showBtn ?
+                    <div>
+                      <div className="row">
+                        <div className="col text-center fs-4 fw-bold">
+                          Correct
+                        </div>
+                      </div>
+
+                      <div className="row">
+                        <div className="col text-center mb-3">
+                          <button className="next" onClick={nextQuestion}>Next</button>
+                        </div>
+                      </div>
+                    </div>
+                    :
+                    null
+                }
+
+                {/* <div className="row">
+                  <div className="col">
+                    Score: 65%
+                  </div>
+                  <div className="col text-end">
+                    Max Score: 75%
+                  </div>
+                </div> */}
+
+                <div className="row">
+                  <div className="col fw-bold">
+                    <Progress percent={progressCount + 5} />
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
+
+export default App
